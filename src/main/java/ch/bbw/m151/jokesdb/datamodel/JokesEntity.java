@@ -1,13 +1,17 @@
 package ch.bbw.m151.jokesdb.datamodel;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import lombok.Data;
+import lombok.experimental.Accessors;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import javax.persistence.*;
+import java.sql.Date;
 
 @Entity
 @Table(name = "jokes")
+@Accessors(chain = true)
+@Data
 public class JokesEntity {
 
 	@Id
@@ -17,16 +21,13 @@ public class JokesEntity {
 	@Column(nullable = false)
 	String joke;
 
-	public JokesEntity setJoke(String joke) {
-		this.joke = joke;
-		return this;
-	}
+	@Version
+	private int version;
 
-	public int getId() {
-		return id;
-	}
 
-	public String getJoke() {
-		return joke;
-	}
+	@CreationTimestamp
+	private Date createdOn;
+
+	@UpdateTimestamp
+	private Date updatedOn;
 }
