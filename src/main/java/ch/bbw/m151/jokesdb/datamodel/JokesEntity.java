@@ -18,7 +18,11 @@ public class JokesEntity {
 	@GeneratedValue
 	int id;
 
-	@Column(nullable = false)
+	@JoinColumn(name = "ratingId")
+	@OneToOne(fetch = FetchType.LAZY)
+	RatingsEntity ratingId;
+
+	@Column(length = 500)
 	String joke;
 
 	@Version
@@ -30,4 +34,29 @@ public class JokesEntity {
 
 	@UpdateTimestamp
 	private Date updatedOn;
+
+	@Column
+	String category;
+	@Column
+	String type;
+	@Column
+	String setup;
+	@Column
+	String delivery;
+	@Column
+	boolean nsfw;
+	@Column
+	boolean religious;
+	@Column
+	boolean political;
+	@Column
+	boolean racist;
+	@Column
+	boolean sexist;
+	@Column
+	boolean explicit;
+	@Column
+	boolean safe;
+	@Column
+	String lang;
 }
