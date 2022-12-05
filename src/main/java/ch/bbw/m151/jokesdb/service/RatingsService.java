@@ -1,5 +1,6 @@
 package ch.bbw.m151.jokesdb.service;
 
+import ch.bbw.m151.jokesdb.datamodel.JokesEntity;
 import ch.bbw.m151.jokesdb.datamodel.RatingsEntity;
 import ch.bbw.m151.jokesdb.repository.RatingsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,31 +14,38 @@ public class RatingsService {
     @Autowired
     private RatingsRepository ratingsRepository;
 
-    public void saveOrUpdateRating(int rating, int jokeId){
-        List<RatingsEntity> ratingsEntityList = ratingsRepository.findAll();
-        RatingsEntity newRating = new RatingsEntity();
-        newRating.setRating(rating);
-        newRating.setId(jokeId);
+    public void saveOrUpdateRating(int rating, int jokeId) {
+        RatingsEntity ratingsEntity = new RatingsEntity();
+        ratingsEntity.setRating(rating);
+        ratingsEntity.setId(jokeId);
 
-        for (RatingsEntity singleRatingEntity : ratingsEntityList){
-            if (singleRatingEntity.getId() == jokeId){
-                newRating.setCreatedOn(singleRatingEntity.getCreatedOn());
+        List<RatingsEntity> ratingsEntities = ratingsRepository.findAll();
+
+        for (RatingsEntity singleRatingsEntity :
+                ratingsEntities) {
+            if (singleRatingsEntity.getId() == jokeId) {
+                ratingsEntity.setRating(rating);
+                ratingsEntity.setId(singleRatingsEntity.getId());
+                ratingsEntity.setCreatedOn(singleRatingsEntity.getCreatedOn());
             }
         }
-
-        ratingsRepository.save(newRating);
+        ratingsRepository.save(ratingsEntity);
     }
 
-    public boolean checkAlreadyExist(int jokeId){
-        List<RatingsEntity> ratingsEntityList = ratingsRepository.findAll();
-        boolean exist = false;
 
-        for (RatingsEntity singleRatingEntity : ratingsEntityList){
-            if (singleRatingEntity.getId() == jokeId){
-                exist = true;
+    public int loadRating(int jokeId) {
+        JokesEntity jokesEntity = new JokesEntity();
+        List<RatingsEntity> ratingsEntities = ratingsRepository.findAll();
+        RatingsEntity foundEntry = new RatingsEntity();
+        foundEntry.setRating(10);
+        foundEntry.setId(jokesEntity.getId());
+        for (RatingsEntity rating :
+                ratingsEntities) {
+            if (rating.getId() == jokeId) {
+                foundEntry = rating;
             }
         }
 
-        return exist;
+        return foundEntry.getRating();
     }
 }

@@ -1,28 +1,27 @@
 package ch.bbw.m151.jokesdb.controller;
 
-import ch.bbw.m151.jokesdb.datamodel.RatingsEntity;
 import ch.bbw.m151.jokesdb.service.RatingsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin
 public class RatingsController {
 
     @Autowired
-    private final RatingsService ratingsService;
+    private RatingsService ratingsService;
 
-    @PostMapping("/saverating/{rating}/{id}")
-    public void saveRating(@PathVariable("rating") int rating, @PathVariable("id") int id){
-        ratingsService.saveOrUpdateRating(rating, id);
+    @PostMapping("/saverating/{rating}/{jokeid}")
+    public ResponseEntity saveOrUpdateRating(@PathVariable("rating") int rating, @PathVariable("jokeid") int jokeId) {
+        ratingsService.saveOrUpdateRating(rating, jokeId);
+        return ResponseEntity.status(201).build();
     }
 
-    @GetMapping("/checkrating/{id}")
-    public boolean checkRating(@PathVariable("id") int id){
-        return ratingsService.checkAlreadyExist(id);
+    @GetMapping("/loadrating/{jokeid}")
+    public ResponseEntity<Integer> loadRating(@PathVariable("jokeid") int jokeId) {
+        return ResponseEntity.ok(ratingsService.loadRating(jokeId));
     }
 }
